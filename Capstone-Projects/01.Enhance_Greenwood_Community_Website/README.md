@@ -33,16 +33,19 @@ I am part of a team tasked with enhancing the website of `Greenwood Community Li
 
 2. The project was originally set up in the main branch. On completion of setting up the files, I 
 Staged, 
+
 ![5.git_add](./img/5.git_add.png)
+
 Committed
+
 ![6.commit](./img/7.commit.png) and 
+
 Pushed directly to the main branch. 
-![new_morgan](img/9.morgan.png)
+
 ![push](./img/8.push.png)
 
 3. A new developer Morgan is to collaborate on the work being done and I had to create a new branch for Morgan 
 
-![push](./img/8.push.png)
 ![new_morgan](img/9.morgan.png)
 
 ![9.morgan](./img/9.morgan.png)
@@ -50,23 +53,32 @@ Pushed directly to the main branch.
 
 4. Morgan got to work and added a new section for book reviews to the project
 
-![8.morgan](./img/9.morgan_branch.png) ![9.nano](./img/10.morgan_nano.png)
+![8.morgan](./img/9.morgan_branch.png) 
+
+![9.nano](./img/10.morgan_nano.png)
 
 5. When Morgan was done with the section, it was staged, committed and pushed to the repository. (Similar process as above)
 
 6. A pull request was raised to ask for a review then to be merged with the repository.
 
 ![prmorgan](./img/12.prmorgan.png)
+
 ![createpr](./img/13.createpr.png)
+
 ![mergedone](./img/14.megeconfirm.png)
 
 7. Tasks 3-6 was repeated for a new developer `Jamie`
 
 ![jamie](./img/15.jamiesbranch.png)
+
 ![jamie2](./img/16.jamiesmerge.png)
+
 ![jamie3](./img/17.jamiesfile.png)
+
 ![jamie4](./img/18.jsmirdstage.png)
+
 ![jamie5](./img/19.jamiescomit.png)
+
 ![jamie6](./img/20.jamiespush.png)
 
 test 
