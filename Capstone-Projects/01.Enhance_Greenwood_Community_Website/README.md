@@ -38,11 +38,10 @@ Committed
 ![6.commit](./img/7.commit.png) and 
 Pushed directly to the main branch. 
 ![push](./img/8.push.png)
-![8.morgan](./img/9.morgan_branch.png)
-
 
 3. A new developer `Morgan` is to collaborate on the work being done and I had to create a new branch for Morgan 
 
+![9.morgan](./img/9.morgan_branch.png)
 ![morgan](./img/9.morgan_branch.png)
 
 4. Morgan got to work and added a new section for book reviews to the project
