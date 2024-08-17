@@ -45,7 +45,7 @@ Pushed directly to the main branch.
 ![morgan](./img/9.morgan_branch.png)
 
 4. Morgan got to work and added a new section for book reviews to the project
-
+![push](./img/8.push.png)
 ![8.morgan](./img/9.morgan_branch.png) ![9.nano](./img/10.morgan_nano.png)
 
 5. When Morgan was done with the section, it was staged, committed and pushed to the repository. (Similar process as above)
