@@ -42,7 +42,9 @@ Pushed directly to the main branch.
 3. A new developer Morgan is to collaborate on the work being done and I had to create a new branch for Morgan 
 
 ![newmorgan](./img/morgan_branch.png)
+yeah
 ![9.morgan](./img/9.morgan_branch.png)
+yeah
 ![morgan](./img/9.morgan_branch.png)
 
 4. Morgan got to work and added a new section for book reviews to the project
