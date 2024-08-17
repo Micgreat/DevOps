@@ -83,3 +83,10 @@ Pushed directly to the main branch.
 
 test 
 ![jamie7](./img/16.jamiesmerge.png)
+
+
+```markdown
+cd /var/etc
+```
+
+``` cd /var/etc ```
