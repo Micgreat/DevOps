@@ -27,4 +27,10 @@ I am part of a team tasked with enhancing the website of `Greenwood Community Li
 
 ![4.nano](./img/6.nano.png)
 
-5. The project was originally set up in the main branch. On completion of setting up the files, I Staged, Committed and Pushed directly to the main branch. 
+5. The project was originally set up in the main branch. On completion of setting up the files, I 
+Staged, 
+![5.git_add](./img/5.git_add.png)
+Committed
+![6.commit](./img/7.commit.png) and 
+Pushed directly to the main branch. 
+![7.push](./img/8.push.png)
