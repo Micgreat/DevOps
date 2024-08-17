@@ -53,7 +53,7 @@ Pushed directly to the main branch.
 
 4. Morgan got to work and added a new section for book reviews to the project
 
-![8.morgan](./img/9.morgan_branch.png) 
+![8.neww_morgan](img/11.new_morganbranch.png)
 
 ![9.nano](./img/10.morgan_nano.png)
 
