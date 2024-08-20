@@ -89,6 +89,10 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 
 4. To successfully clone the repository from github to the server, I installed git `sudo yum install git`
 
+```markdown
+$sudo yum install git
+```
+
 ![img19](./img/23.installgitserver.png)
 
 5. All that's left is to copy the `HTTPS` clone link from github repository and paste to the server.
@@ -100,11 +104,20 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 ### Tasks:
 1. I installed an Apache webserver on the EC2 instance
 
+```markdown
+$sudo yum update -y
+```
+
 ![img21](./img/25.installapacheserver.png)
 
 ![img22](./img/26.installapache2.png)
 
 2. Start and enable the apache server 
+
+```markdown
+$sudo systemctl start httpd
+$sudo systemctl enable httpd
+```
 
 ![img23](./img/27.start&enableserver.png)
 
@@ -117,6 +130,10 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 ![img25](./img/29.copiednewdirectory.png) 
 
 4. Reload the changes by reloading the httpd service
+
+```markdown
+$sudo systemctl reload httpd
+```
 
 ![img26](./img/30.reloadhttpd.png)
 
