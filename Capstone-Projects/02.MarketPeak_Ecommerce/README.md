@@ -35,7 +35,7 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 ## Step 2: Preparing the Website Template to be Used.
 
 ### Tasks:
-1. I downloaded the template and extracted it to the project directory. 
+1. I downloaded the template and extracted it to the project directory on my local repository. 
 
 ![img6](./img/6.extract.png)
 
@@ -58,7 +58,7 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 ## Step 3: Set up an AWS EC2 Instance 
 
 ### Tasks:
-1. Accessed the aws website then to launch and EC2 instance 
+1. Accessed the AWS website to launch an EC2 instance 
 
 ![img11](./img/12.awsinstance.png)
 
@@ -91,7 +91,7 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 
 ![img19](./img/23.installgitserver.png)
 
-5. All that's left is to copy the `HTTPS` link from github repository and paste to the server.
+5. All that's left is to copy the `HTTPS` clone link from github repository and paste to the server.
 
 ![img20](./img/24.clonegittoserver.png)
 
@@ -130,3 +130,56 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 ### Tasks:
 1. I set up a `development branch` to ensure a smooth workflow for developing, testing and deploying. This isolates new features and bug fixes from the stable version of the website 
 
+![img28](./img/32.gitbranchdev.png)
+
+2. I switched over to the newly created development to create a file to be pushed to the production server.
+
+![img29](./img/33.devbranchswitch.png)
+
+3. Created the file `update.html` and echoed `freestyle` into it to be pushed.
+
+![img30](./img/34.filenanodev.png)
+
+4. Staged, committed and pushed to the remote repository to be pulled by the production server. 
+
+![img31](./img/35.gitadddevfile.png)
+
+![img32](./img/36.gitcommitdev.png)
+
+![img33](./img/37.gitpushdev.png)
+
+5. The update.html was copied to var/www/html and became the new page but wasn't saved because the content was only `freestyle`
+
+
+
+## Challenges and Troubleshooting
+1. I generated the ssh keygen from the production server, copied it to paste in github repssh and CPG Key, but I copied the private key instead of the public key 
+
+![img34](./img/38.sshprivatekeytgen.png)
+
+I catted this below, mistaken it for the public key 
+
+![img35](./img/39.errorprivatekeycopy.png)
+
+Should have catted this instead 
+
+```markdown
+$ cat /home/ec2-user/.ssh/id_rsa.pub
+```
+![img17](./img/21.catkey.png)
+
+2. Had issues cloning the git hub repository to the `apache server` (prod server)
+
+... it's not possible to clone the sub-directory byt copying the url link, the only way is to life the entire repository, regardless of the number of folders present.
+
+![img20](./img/24.clonegittoserver.png)
+
+3. It's not possible to copy a folder to another location while in the directory. The directory to the cloned file would have to be copied to `/var/www/html` but the initial file in there would be deleted first before copying. `ref step 5 task 3`
+
+4. I had a challenge pushing an update, as I was pushing from the branch and didn't merge the branch to the main. `All updates should be pushed from the main branch.
+
+![img36](./img/40.mergeerrordev.png)
+
+![img37](./img/41.pullerrprdev.png)
+
+![img38](./img/42.fixed.png)
