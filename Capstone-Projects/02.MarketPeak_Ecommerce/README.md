@@ -79,11 +79,11 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 
 ![img16](./img/18.keygen.png)
 
-3. Entered the directory where the key is located to copy out and paste in github
+3. located the directory where the key is located to copy out and paste in github
 
 ![img17](./img/21.catkey.png)
 
-    b. ssh pasted in github under settings
+b. ssh pasted in github under settings
 
 ![img18](./img/22.githubssh.png)
 
@@ -125,7 +125,7 @@ $sudo systemctl enable httpd
 
 ![img24](./img/28.rmdefaultdirectory.png)
 
-    b. copied new directory to it
+b. copied new directory to it
 
 ![img25](./img/29.copiednewdirectory.png) 
 
