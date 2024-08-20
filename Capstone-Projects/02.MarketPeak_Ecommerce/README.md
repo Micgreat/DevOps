@@ -47,7 +47,7 @@ I was assigned to develop an e-commerce webstite for a new online marketplace na
 
 ![img8](./img/8.globalusername.png)
 
-        and email.
+and email.
 
 ![img9](./img/9.globalemail.png)
 
