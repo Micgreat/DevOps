@@ -8,6 +8,7 @@ Using bash script, I created a script that generates a multiplication table for 
 1. Familiarize with windows Ubuntu as bash is a linux/unix language
 2. Implement using loops, user inputs and conditional logic.
 3. Use of comment for code quality and readability.
+4. Understand how to use variables to store user inputs and use them in calculations. 
 
 ## Step 1: Implement the Functions
 
@@ -70,4 +71,5 @@ Descending = `display_table_ascending`
 
 ![img14](./img/14.result2.png)
 
+Invalid message for wrong input
 ![img15](./img/15.result3.png)
