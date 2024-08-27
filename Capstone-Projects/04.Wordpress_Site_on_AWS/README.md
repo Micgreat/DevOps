@@ -118,8 +118,87 @@ Also, I created a security group for it.
 
 ![img25](./img/25.bastion-host-security-group.png)
 
-## Task b: Setting up the Webservers
+## Task b: Setting up EFS
+
+1. I created an EFS file system to be mounted on the wordpress instance.
+
+![img30](./img/31.efilesystem.png)
+
+## Task c: Setting up the RDS database
+
+![img31](./img/32.mysql-database.png)
+
+![img32](./img/33.mysql-name-pwd.png)
+
+![img33](./img/34.mysql-connectivity.png)
+
+![img34](./img/35.mysql-security-group.png)
+
+## Task d: Setting up the Webservers
 
 1. I created an Amazon AMI instance in the private subnet 1a, linked to the vpc and webserver security group. 
 
 ![img26](./img/27.webserver1.png)
+
+2. I copied the private key from the local storage, created a new folder in bastion host and pasted it. This will serve as key connection for the jump server to access the webserver in the private subnet.
+
+![img27](./img/28.privatekey.png)
+
+3. I ssh into the jumpserver
+
+![img28](./img/29.ssh-jumopserver.png)
+
+4. From there I ssh into the private webserver
+
+![img29](./img/30.webserver.png)
+
+5. Update the server
+
+![img35](./img/36.update-server.png)
+
+6. Installed apache and SSL
+
+![img36](./img/37.installedapached%20and%20ssl.png)
+
+7. Enabled and Started Apache
+
+![img37](./img/38.enabled-and-started-apache.png)
+
+8. Installed PHP
+
+![img38](./img/39.installed-php.png)
+
+9. Installed MySQL
+
+![img39](./img/40.installed-mysql.png)
+
+10. Set Permissions
+
+![img40](./img/41.set-permissions.png)
+
+11. Download and extract wordpress
+
+![img41](./img/42.download-extract-wordpress.png)
+
+12. Edit config files 
+
+![img42](./img/43.create-edit-config-file.png)
+
+13. Restart Server
+
+![img43](./img/44.restart-server.png)
+
+## Task e: Setting up the Application Load Balancer and Target Group
+
+![img44](./img/45.alb.png)
+
+![img45](./img/46.alb-network.png)
+
+![img46](./img/47.alb-security.png)
+
+![img47](./img/48.targetgroup.png)
+
+![img48](./img/49.alb-provisioning.png)
+
+## Task f: Setting up Autoscaling
+
