@@ -191,15 +191,114 @@ Add
 ```markdown
 Git add .
 ```
+![img7](./img/7.gitadd.png)
 
 Commit
 ```markdown
 Git commit -m "Updated README.md"
 ```
+![img8](./img/8.gitcommit.png)
 
 Push 
 ```markdown
 Git Push
 ```
+![img9](./img/9.gitpush.png)
+
+## Step 2: Dockerize the Application
+
+### Tasks:
+
+1. Create a `dockerfile` and specify nginx as the base image in the same directory as the index.html file.
+
+```markdown
+touch dockerfile
+```
+```markdown
+vim dockerfile
+```
+
+Paste the code below
+
+```markdown
+# Use the official NGINX base image
+FROM nginx:latest
+
+# Set the working directory in the container
+WORKDIR  /usr/share/nginx/html/
+
+# Copy the local HTML file to the NGINX default public directory
+COPY index.html /usr/share/nginx/html/
+
+# Expose port 80 to allow external access
+EXPOSE 80
+
+# No need for CMD as NGINX image comes with a default CMD to start the server
+```
+
+2. Build an image using the `dockerfile` just created.
+
+```markdown
+docker build -t dockerfile .
+```
+![img4](./img/4.docker-build.png)
+
+3. Check the images list to confirm the dockerfile image is already created
+
+```markdown
+docker images 
+```
+![img5](./img/5.docker-images.png)
+
+4. Run a container based on the image created and map it to a listening port
+
+```markdown
+docker run -p 8080:80 dockerfile
+```
+![img6](./img/6.docker-run.png)
+
+5. Check the list of available containers
+
+```markdown
+docker ps -a
+```
+
+![img10](./img/10.docker-ps.png)
+
+6. Copy out the container ID and start
+
+```markdown
+docker start 5a04c49663c5 
+```
+
+![img11](./img/11.docker-start.png)
+
+7. Type the docker host IP in the host web browser including the port to view the webpage.
+
+![img12](./img/12.webpage-view.png)
 
 
+## Step 3: Push to Dockerhub
+
+### Tasks:
+
+1. I already have a dockerhub account, I'll tag my image using my username and repository name then push.
+
+```markdown
+docker tag dockerfile micgreat/capstone6:1.0
+```
+![img13](./img/13.docker-tag.png)
+
+2. Login to docker hub 
+
+```markdown
+docker login -u micgreat
+```
+![img14](./img/14.docker-login.png)
+
+3. Push the image to docker hub
+
+```markdown
+docker push micgreat/capstone6:1.0
+```
+![img15](./img/15.docker-push.png)
