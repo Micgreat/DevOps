@@ -302,3 +302,113 @@ docker login -u micgreat
 docker push micgreat/capstone6:1.0
 ```
 ![img15](./img/15.docker-push.png)
+
+
+## Step 4: Set up a Kind Kubernetes Cluster
+
+### Tasks:
+
+1. Install Kind (Kubernetes in Docker)
+```markdown
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+```
+2. Create a Kind Cluster
+
+```markdown
+kind create cluster --name cap6
+```
+![img16](./img/16.cluster.png)
+
+## Step 5: Deploy to Kubernetes
+
+### Tasks:
+
+1. Create a Kubernetes YAML file
+
+```markdown
+touch cap6.yaml
+```
+
+```markdown
+vim cap6.yaml
+```
+
+Paste the code
+
+```markdown
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cap6-deployment  # Name of the deployment
+spec:
+  replicas: 1  # Number of replicas (pods) you want to run
+  selector:
+    matchLabels:
+      app: cap6-web  # The label selector to identify the pods managed by this deployment
+  template:
+    metadata:
+      labels:
+        app: cap6-web  # Label to identify the pods created by this deployment
+    spec:
+      containers:
+      - name: cap6-container  # Name of the container
+        image: micgreat/capstone6:1.0  # Docker image for the container
+        ports:
+        - containerPort: 80  # Port that the container will expose
+```
+
+2. Apply the deploymemt to the cluster
+
+```markdown
+kubectl apply -f cap6.yaml
+```
+![img17](./img/17.apply-file.png)
+
+## Step 6: Create a Service (Cluster IP)
+
+1. Create a Kubernetes Service YAML file 
+
+```markdown
+touch cap6_service.yaml
+```
+
+```markdown
+vim cap6_service.yaml
+```
+
+Paste the code below
+
+```markdown
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service  # Name of the service
+spec:
+  type: ClusterIP  # Service type (only accessible within the cluster)
+  selector:
+    app: my-app  # Selects the pods with this label (matches the deployment label)
+  ports:
+    - protocol: TCP
+      port: 80  # Port on the service
+      targetPort: 80  # Port on the pod that the service forwards traffic to
+```
+
+2. Apply the service to the cluster
+
+```markdown
+kubectl apply -f cap6_service.yaml
+```
+
+![img18](./img/18.apply-service.png)
+
+## Step 7: Access the Application
+
+1. Port forward the service to access the application locally
+
+```markdown
+kubectl expose deployment.apps/cap6-deployment --type=NodePort --port=8080
+```
+
+2. Application can be viewed.
