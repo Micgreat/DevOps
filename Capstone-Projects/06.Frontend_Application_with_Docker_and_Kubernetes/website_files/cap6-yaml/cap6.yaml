@@ -6,14 +6,14 @@ spec:
   replicas: 1  # Number of replicas (pods) you want to run
   selector:
     matchLabels:
-      app: cap6-web  # The label selector to identify the pods managed by this deployment
+      app: cap6  # The label selector to identify the pods managed by this deployment
   template:
     metadata:
       labels:
-        app: cap6-web  # Label to identify the pods created by this deployment
+        app: cap6  # Label to identify the pods created by this deployment
     spec:
       containers:
-      - name: cap6-container  # Name of the container
+      - name: cap6  # Name of the container
         image: micgreat/capstone6:1.0  # Docker image for the container
         ports:
         - containerPort: 80  # Port that the container will expose
