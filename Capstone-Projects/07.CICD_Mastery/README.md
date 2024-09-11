@@ -61,10 +61,57 @@ Configure Jenkins server for CI/CD pipeline automation.
    Instance Config
    ![img8](./img/10.instance-config.png)
 
-2. Source Code Management Repository Integration.
+2. Create a Jenkins Freestyle and set up Source Code Management Repository Integration.
 
     ## Tasks:
     1. Integrate Jenkins with the source code (Github)
+
+    ![img9](./img/11.test-freestyle.png)
+
+    Source Code Management
+    ![img10](./img/12.source-code-mng.png)
+
+    Github hook trigger for GITScm polling
+    ![img11](./img/13.source-code2.png)
+
+    2. Connecting github webhook
+    ![img12](./img/14.github-webhook.png)
+
+    3. Webhook won't be triggered unless I push a file from git to github, so I created a quick index file
+    ![img13](./img/15.not-triggered.png)
+
+    ```markdown
+    touch pipeline.html
+    ```
+
+    ```markdown
+    echo "test for pipeline" > pipeline.html
+    ```
+
+    ```markdown
+    git add .
+    ```
+
+    ```markdown
+    git commit -m "Update for pipeline"
+
+    ```
+    ```markdown
+    git push
+    ``` 
+
+    Trigger Successful after successful push
+    ![img14](./img/16.trigger-push-successful.png)
+
+    Trigger confirmed successfully on github by the build
+    ![img15](./img/17.jenkins-confirmatino.png)
+
+3.  Create a Jenkin Pipeline Script to run a Web Application
+
+4. Docker Image Creation and Registry Push
+
+
+
 
 
 
