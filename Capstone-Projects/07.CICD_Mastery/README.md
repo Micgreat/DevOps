@@ -101,19 +101,174 @@ Configure Jenkins server for CI/CD pipeline automation.
     ``` 
 
     Trigger Successful after successful push
+
     ![img14](./img/16.trigger-push-successful.png)
 
     Trigger confirmed successfully on github by the build
+
     ![img15](./img/17.jenkins-confirmatino.png)
 
 3.  Create a Jenkin Pipeline Script to run a Web Application
+```markdown
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'your-dockerhub-username/your-webapp-image'
+        CONTAINER_NAME = 'webapp-container'
+        APP_PORT = '8080' // Port on which the app runs inside the container
+        HOST_PORT = '8080' // Port exposed to the host
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials') // Jenkins credentials ID for Docker Hub
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Pull the application code from SCM (e.g., GitHub)
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image from the Dockerfile in the project
+                    docker.build("${DOCKER_IMAGE}:latest")
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Login to Docker Hub and push the image
+                    docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
+                        docker.image("${DOCKER_IMAGE}:latest").push()
+                    }
+                }
+            }
+        }
+
+        stage('Run Web Application') {
+            steps {
+                script {
+                    // Stop any running container with the same name
+                    sh """
+                    if [ \$(docker ps -q -f name=${CONTAINER_NAME}) ]; then
+                        docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME}
+                    fi
+                    """
+                    // Run the web application in a Docker container
+                    sh """
+                    docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:${APP_PORT} ${DOCKER_IMAGE}:latest
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Cleanup workspace
+            cleanWs()
+        }
+    }
+}
+```
+
 
 4. Docker Image Creation and Registry Push
+    ### Tasks:
+    1. Install docker on jenkins server
+    ```markdown
+    sudo apt update -y
+    sudo apt install docker -y
+    sudo service docker start
+    sudo usermod -aG docker jenkins  # To allow Jenkins to run Docker commands without sudo
+   ```
+
+   2. Install `docker` and `docker pipeline` plugins on Jenkins and restart.
+
+   ![img16](./img/20.docker-jenkins.png)
+
+   3. Set up Jenkins credentials for docker hub
+
+   ![img17](./img/21.docker-cred.png)
+
+   ![img18](./img/22.docker-cred-done.png)
+
+    4. Create a Jenkins pipeline script for docker build
+
+   ```markdown
+   pipeline {
+    agent any
+
+    environment {
+        DOCKER_CREDENTIALS = credentials('docker-hub-credentials') // Docker Hub credentials ID
+        IMAGE_NAME = "my-web-app" // Change this to your app's Docker image name
+        DOCKER_REGISTRY = "my-dockerhub-username/${IMAGE_NAME}"
+        CONTAINER_NAME = "web-app-container"
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Clone the web application repository containing your Dockerfile
+                git 'https://github.com/your-web-app-repo.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image using the Dockerfile in the repo
+                    sh "docker build -t ${DOCKER_REGISTRY}:${BUILD_NUMBER} ."
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    // Login to Docker Hub and push the image
+                    sh "docker login -u ${DOCKER_CREDENTIALS_USR} -p ${DOCKER_CREDENTIALS_PSW}"
+                    sh "docker push ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    // Stop and remove the old container if it's running
+                    sh """
+                    if [ \$(docker ps -a -q -f name=${CONTAINER_NAME}) ]; then
+                        docker stop ${CONTAINER_NAME}
+                        docker rm ${CONTAINER_NAME}
+                    fi
+                    """
+
+                    // Run a new container using the built image
+                    sh "docker run -d --name ${CONTAINER_NAME} -p 8080:80 ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+                }
+            }
+        }
+
+        stage('Clean Up') {
+            steps {
+                script {
+                    // Remove the Docker image locally after running the container to save space
+                    sh "docker rmi ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+                }
+            }
+        }
+    }
+    ```
 
 
+5. Test the pipeline and acces the web application.
 
-
-
-
-
-
+    ```markdown
+    http://<your-server-ip>:8080
+    ```
+    
