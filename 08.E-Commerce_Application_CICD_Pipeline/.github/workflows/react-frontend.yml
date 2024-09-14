@@ -1,0 +1,82 @@
+name: Build, Test, and Deploy React Frontend
+
+# Trigger the workflow on pushes to the 'main' branch.
+on:
+  push:
+    branches:
+      - main
+
+# Define the job that will run. The job is named 'build-and-deploy'.
+jobs:
+  build-and-deploy:
+    # The environment to run the job on is 'ubuntu-latest'.
+    runs-on: ubuntu-latest
+
+    # Define the sequence of steps to execute in this job.
+    steps:
+    
+    # Step 1: Checkout the repository code.
+    - name: Checkout code
+      uses: actions/checkout@v3
+      # This action pulls the repository's code into the runner environment.
+
+    # Step 2: Set up Node.js environment.
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'  # Specify the Node.js version to be used.
+      # This ensures the workflow uses Node.js version 18, which is compatible with the React app.
+    
+    - name: Cache Node.js modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.npm
+          ~/.cache
+        key: ${{ runner.os }}-node-${{ hashFiles('webapp/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    # Step 3: Install dependencies for the frontend React application.
+    - name: Install dependencies
+      run: |
+        cd webapp  # Navigate into the webapp directory.
+        npm install  # Install the required dependencies.
+      # This installs the npm dependencies listed in the 'package.json' of the React app.
+
+    # Step 4: Run tests to ensure the frontend app is functioning correctly.
+    - name: Run tests
+      run: |
+        cd webapp  # Navigate into the webapp directory.
+        npm test  # Run the test suite.
+      # Running tests ensures that no code breaking errors are present.
+
+    # Step 5: Set up Docker Buildx to support multi-platform image builds.
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      # Docker Buildx allows you to build images for different platforms efficiently.
+
+    # Step 6: Build and push the Docker image for the React app.
+    - name: Build and push Docker image
+      run: |
+        cd webapp  # Navigate into the webapp directory.
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/webapp:latest .  # Build the Docker image.
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin  # Log in to Docker Hub.
+        docker push ${{ secrets.DOCKER_USERNAME }}/webapp:latest  # Push the built image to Docker Hub.
+      # This step builds the Docker image from the React app and pushes it to Docker Hub under the 'webapp:latest' tag.
+
+    # Step 7: Deploy the Docker image to AWS EC2.
+    - name: Deploy to AWS EC2
+      uses: appleboy/ssh-action@v0.1.6  # Use the SSH action to connect to the EC2 instance.
+      with:
+        host: ${{ secrets.AWS_EC2_PUBLIC_IP }}  # The public IP of the EC2 instance.
+        username: ubuntu  # The username to use when connecting via SSH.
+        key: ${{ secrets.AWS_EC2_SSH_KEY }}  # The private SSH key to connect to the EC2 instance.
+        port: 22  # Default SSH port.
+        script: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/webapp:latest  # Pull the latest Docker image from Docker Hub.
+          docker stop webapp || true  # Stop the existing webapp container if it exists.
+          docker rm webapp || true  # Remove the stopped container to avoid conflicts.
+          docker run -d -p 80:80 --name webapp ${{ secrets.DOCKER_USERNAME }}/webapp:latest  # Run the new container, binding it to port 80.
+      # This step connects to the AWS EC2 instance, pulls the latest Docker image, and deploys it.
+      # The existing container is stopped and removed if it's already running to ensure a fresh deployment.
