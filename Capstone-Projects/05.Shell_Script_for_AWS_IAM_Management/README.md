@@ -17,37 +17,77 @@ Datawise Solutions requires an efficient management of their AWS IAM. I am taske
 
 1. Created the file `aws_cloud_manager.sh`
 
+```markdown
+touch aws_cloud_manager.sh
+```
 ![img1](./img/1.touch.png)
 
 2. Gave the file execute permission
 
+```markdown
+chmod +x aws_cloud_manager.sh
+```
 ![img2](./img/2.modify-for-permission.png)
 
 3. Ensure they have AWS CLI imstalled 
 
+```markdown
+if ! command -v aws &> /dev/null
+then
+    echo"AWS CLI could not be found. Please install it first."
+    exit 1
+fi
+```
 ![img3](./img/3.ensuring-aws-installed.png)
 
 4. Create an array for the employees to be onboarded
 
+```markdown
+users=("employee1" "employee2" "employee3" "employee4" "employee5")
+```
 ![img4](./img/4.array-for-employees.png)
 
 5. Create admin group 
 
+```markdown
+create_admin_group(){
+    echo"CReating IAM group 'admin' ..."
+    aws iam create-group --group-name admin
+    echo "IAM group 'admin' created."
+}
+```
 ![img5](./img/5.create-admin-group.png)
 
 6. Attach the admin group to the admin policy 
 
+```markdown
+echo"Attaching the "AdministratorAccess' policy attached to the 'admin' group..."
+aws iam attach-group-policy --group-name admin --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+echo "'AdministratorAccess' policy attached to the 'admin' group."
+```
 ![img6](./img/6.attach-admin-polic.png)
 
 7. Create the users to be onboarded
+
+```markdown
+for user in "${users[@]}"; do
+echo "Creating IAM user '$user'..."
+echo "IAM ser '$user' created."
+```
 
 ![img7](./img/7.create-user.png)
 
 8. Add all the created users to the admin group
 
+```markdown
+echo "Adding IAM user '$user' to the 'admin' group..."
+aws iam add-user-to-group --user-name "$user" --group-name admin
+echo "IAM user '$user' added to the 'admin' group."
+done
+```
 ![img8](./img/8.add-user-to-admin.png)
 
-9. Attache the admnin policy to the admin group created
+9. Attach the admnin policy to the admin group created
 
 ![img9](./img/9.admingroup-policy.png)
 
