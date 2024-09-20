@@ -85,4 +85,48 @@ docker run -p 3000:3000 webapp
 
 ## Task 2: Terraform Module for Amazon ECR
 
-I created an ECR module and placed it in the repo `trfm-ecs-webapp/modules/ecr/main.tf` 
+I created an ECR and ECS module and placed it in the repo `trfm-ecs-webapp/modules/ecr&ecs/main.tf` 
+
+`modules/ecr/main.tf`
+
+```markdown
+resource "aws_ecr_repository" "this" {
+  name                 = "coles-repo"
+  image_tag_mutability = "MUTABLE"  # or "IMMUTABLE" based on your requirements
+
+
+  # Optionally enable scanning on push
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+```
+
+`modules/ecs/main.tf`
+
+```markdown
+resource "aws_ecs_cluster" "foo" {
+  name = "coles-cluster"
+
+}
+```
+
+`trfm-ecs-webapp-main.tf`
+
+```markdown
+provider "aws" {
+  region = "us-east-1"  # Change to your desired region
+}
+
+module "ecr" {
+  source          = "./modules/ecr"
+  repository_name = "coles-repo"  # Change this to your desired repository name
+ 
+}
+
+module "ecs" {
+  source      = "./modules/ecs"
+  cluster_name = "coles-cluster"  # Change this to your desired cluster name
+
+}
+```
