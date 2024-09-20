@@ -85,7 +85,7 @@ docker run -p 3000:3000 webapp
 
 ## Task 2: Terraform Module for Amazon ECR
 
-I created an ECR and ECS module and placed it in the repo `trfm-ecs-webapp/modules/ecr&ecs/main.tf` 
+1. I created an ECR and ECS module and placed it in the repo `trfm-ecs-webapp/modules/ecr&ecs/main.tf` 
 
 `modules/ecr/main.tf`
 
@@ -120,13 +120,109 @@ provider "aws" {
 
 module "ecr" {
   source          = "./modules/ecr"
-  repository_name = "coles-repo"  # Change this to your desired repository name
- 
 }
 
 module "ecs" {
   source      = "./modules/ecs"
-  cluster_name = "coles-cluster"  # Change this to your desired cluster name
-
 }
 ```
+2. I ran terraform using 
+
+```markdown
+terraform init    # Initializes Terraform, downloading necessary providers
+terraform plan    # Creates an execution plan
+terraform apply   # Applies the changes to create the ECS cluster
+
+```
+
+## Task 3: Push to ECR and ECS
+
+1. Tag the docker image to the ECR just created
+
+```markdown
+docker tag my-image:latest aws_account_id.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest
+
+my-image: The name of your Docker image.
+aws_account_id: Your actual AWS account ID.
+us-east-1: The region where your ECR repository is located.
+my-repo: The name of your ECR repository.
+```
+
+2. Push the Docker Image to ECR
+
+```markdown
+docker push aws_account_id.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest
+
+aws_account_id: Your actual AWS account ID.
+my-repo: The name of your ECR repository.
+```
+![img3](./img/3.ecr-repo-created.png)
+
+3. ECS needs a task definition json file which I created. `task-def.json`
+
+```markdown
+{
+    "family": "my-task-family",
+    "networkMode": "bridge",
+    "containerDefinitions": [
+      {
+        "name": "my-container",
+        "image": "aws-account-id-number.dkr.ecr.us-east-1.amazonaws.com/coles-repo:latest",
+        "memory": 512,
+        "cpu": 256,
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 80,
+            "hostPort": 80
+          }
+        ]
+      }
+    ]
+  }
+  
+```
+
+4. I registered the task definition using the AWS CLI
+
+```markdown
+aws ecs register-task-definition --cli-input-json file://task-def.json
+```
+
+5. I  created the service file for the cluster directly the `modules/ecs/main.tf` file
+
+```markdown
+resource "aws_ecs_task_definition" "my_task" {
+  family                   = "my-task-family"
+  network_mode            = "awsvpc"  # or "bridge"
+  requires_compatibilities = ["EC2"]  # or "FARGATE"
+
+  container_definitions = jsonencode([{
+    name      = "my-container"
+    image     = "aws-account-id-number.dkr.ecr.us-east-1.amazonaws.com/coles-repo:latest"
+    memory    = 512
+    cpu       = 256
+    essential = true
+    portMappings = [{
+      containerPort = 80
+      hostPort      = 80
+    }]
+  }])
+}
+
+resource "aws_ecs_service" "my_service" {
+  name            = "my-service"
+  cluster         = aws_ecs_cluster.foo.id
+  task_definition = aws_ecs_task_definition.my_task.id
+  desired_count   = 1
+
+  launch_type = "EC2"  # or "FARGATE"
+
+  network_configuration {
+    subnets          = ["subnet-xxxfb"]  # Add your subnet IDs
+    security_groups  = ["sg-xxxx"]      # Add your security group ID
+    assign_public_ip = false
+  }
+}
+```
+![img4](./img/4.deployed-ecs-cluster.png)
