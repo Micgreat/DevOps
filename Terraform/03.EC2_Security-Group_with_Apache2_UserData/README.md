@@ -77,7 +77,7 @@ module "security-group" {
 
 ```markdown
 terraform init    # Initializes Terraform, downloading necessary providers
-terraform plan    # Creates an execution plan
+terraform plan    # Creates an execution plan.
 terraform apply   # Applies the changes to create the ECS cluster
 
 ```
