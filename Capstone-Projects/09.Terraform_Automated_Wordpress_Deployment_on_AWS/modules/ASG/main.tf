@@ -1,17 +1,18 @@
-resource "aws_launch_configuration" "web" {
+resource "aws_launch_template" "web" {
   name          = "web-launch-configuration"
   image_id     = "ami-0ebfd941bbafe70c6"  # Replace with your desired AMI
   instance_type = "t2.micro"
-  security_groups = var.web_sg
-  user_data = <<-EOF
+  vpc_security_group_ids = var.web_sg
+  user_data = base64encode(<<-EOF
               #!/bin/bash
               echo "Hello World" > index.html
               nohup python -m SimpleHTTPServer 80 &
               EOF
+  )
 }
 
 resource "aws_autoscaling_group" "web" {
-  launch_configuration = aws_launch_configuration.web.id
+  launch_configuration = aws_launch_template.web.id
   min_size            = 1
   max_size            = 3
   desired_capacity    = 2

@@ -1,7 +1,7 @@
 # DB Subnet Group for RDS
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds-subnet-group"
-  subnet_ids = [var.private_az1_subnets_ids[1]]
+  subnet_ids = [var.private_az1_subnets_ids[1],var.private_az2_subnets_ids[1]]
 
   tags = {
     Name = "rds-subnet-group"
@@ -12,7 +12,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 resource "aws_db_instance" "mysql" {
   allocated_storage    = 20
   engine               = "mysql"
-  engine_version       = "8.0.23"
+  engine_version       = "8.0.35"
   instance_class       = "db.t3.micro"
   username             = "admin"
   password             = "MySecurePassword123"

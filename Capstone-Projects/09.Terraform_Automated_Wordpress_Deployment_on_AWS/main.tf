@@ -62,6 +62,7 @@ module "ec2_bastion" {
 module "rds" {
     source = "./modules/RDS"
     private_az1_subnets_ids = module.subnets.private_az1_subnets_ids
+    private_az2_subnets_ids = module.subnets.private_az2_subnets_ids
     rds_sg              = module.security_groups.rds_sg
 }
 

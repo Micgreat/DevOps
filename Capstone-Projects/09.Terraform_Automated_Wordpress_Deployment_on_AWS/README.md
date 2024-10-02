@@ -885,7 +885,7 @@ variable "rds_db_password" {
 # DB Subnet Group for RDS
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds-subnet-group"
-  subnet_ids = [var.private_az1_subnets_ids[1]]
+  subnet_ids = [var.private_az1_subnets_ids[1],var.private_az2_subnets_ids[1]]
 
   tags = {
     Name = "rds-subnet-group"
@@ -896,7 +896,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 resource "aws_db_instance" "mysql" {
   allocated_storage    = 20
   engine               = "mysql"
-  engine_version       = "8.0.23"
+  engine_version       = "8.0.35"
   instance_class       = "db.t3.micro"
   username             = "admin"
   password             = "MySecurePassword123"
@@ -919,6 +919,12 @@ resource "aws_db_instance" "mysql" {
 # Private AZ1 Subnets Variable
 variable "private_az1_subnets_ids" {
     description = "List of private-az1 subnets cidr"
+    type = list(string)
+}
+
+# Private AZ2 Subnets Variable
+variable "private_az2_subnets_ids" {
+    description = "List of private-az2 subnets cidr"
     type = list(string)
 }
 
@@ -962,7 +968,8 @@ output "rds_db_password" {
 ```markdown
 module "rds" {
     source = "./modules/RDS"
-    private_az1_subnets = module.subnets.private_az1_subnets
+    private_az1_subnets_ids = module.subnets.private_az1_subnets_ids
+    private_az2_subnets_ids = module.subnets.private_az2_subnets_ids
     rds_sg              = module.security_groups.rds_sg
 }
 
@@ -1171,20 +1178,21 @@ I used terraform to write scripts for auto scaling group creation, defined scali
 `main.tf`
 
 ```markdown
-resource "aws_launch_configuration" "web" {
+resource "aws_launch_template" "web" {
   name          = "web-launch-configuration"
   image_id     = "ami-0ebfd941bbafe70c6"  # Replace with your desired AMI
   instance_type = "t2.micro"
-  security_groups = var.web_sg
-  user_data = <<-EOF
+  vpc_security_group_ids = var.web_sg
+  user_data = base64encode(<<-EOF
               #!/bin/bash
               echo "Hello World" > index.html
               nohup python -m SimpleHTTPServer 80 &
               EOF
+  )
 }
 
 resource "aws_autoscaling_group" "web" {
-  launch_configuration = aws_launch_configuration.web.id
+  launch_configuration = aws_launch_template.web.id
   min_size            = 1
   max_size            = 3
   desired_capacity    = 2
