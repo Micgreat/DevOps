@@ -1,0 +1,49 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    paths:
+      - '**/*.yaml'   # Trigger on changes to all YAML files
+
+      branches:
+        - main        # Limit this to the 'main' branch
+  pull_request:
+    branches:
+      - main         # Trigger workflow for PRs to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Kustomize
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y kustomize
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.25.0'
+
+    - name: Authenticate with Kubernetes
+      run: |
+        echo "${{ secrets.KUBECONFIG_FILE }}" > $HOME/.kube/config
+
+    - name: Deploy to Development Environment
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        kubectl apply -k overlays/dev
+
+    - name: Deploy to Staging Environment
+      if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
+      run: |
+        kubectl apply -k overlays/staging
+
+    - name: Deploy to Production Environment
+      if: github.ref == 'refs/heads/production' && github.event_name == 'push'
+      run: |
+        kubectl apply -k overlays/prod
