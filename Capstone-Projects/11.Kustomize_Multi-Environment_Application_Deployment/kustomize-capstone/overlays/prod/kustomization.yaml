@@ -1,0 +1,25 @@
+resources:
+  - ../../base
+
+patchesStrategicMerge:
+  - patch.yaml
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+
+# Patching ConfigMap for production environment
+configMapGenerator:
+  - name: webapp-config
+    behavior: merge
+    literals:
+      - APP_ENV=production
+      - LOG_LEVEL=error
+
+# Patching Secret for production environment
+secretGenerator:
+  - name: webapp-secrets
+    behavior: merge
+    literals:
+      - DB_PASSWORD=cHJvZHBhc3N3b3Jk     # 'prodpassword'
+      - API_KEY=cHJvZGFwaWtleQ==         # 'prodapikey'

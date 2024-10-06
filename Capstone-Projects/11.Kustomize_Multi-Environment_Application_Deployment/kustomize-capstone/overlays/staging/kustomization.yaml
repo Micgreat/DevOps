@@ -1,0 +1,24 @@
+resources:
+  - ../../base
+
+patchesStrategicMerge:
+  - patch.yaml
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+
+# Patching ConfigMap for staging environment
+configMapGenerator:
+  - name: webapp-config
+    behavior: merge
+    literals:
+      - APP_ENV=staging
+      - LOG_LEVEL=info
+
+# Patching Secret for staging environment
+secretGenerator:
+  - name: webapp-secrets
+    behavior: merge
+    literals:
+      - DB_PASSWORD=c3RhZ2luZ3Bhc3N3b3Jk   # 'stagingpassword'
+      - API_KEY=c3RhZ2luZ2FwaWtleQ==       # 'stagingapikey'
+

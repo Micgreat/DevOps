@@ -1,0 +1,9 @@
+# config-map.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webapp-config
+data:
+  APP_ENV: "development"    # Set this value based on the environment
+  LOG_LEVEL: "debug"
+  MAX_CONN: "100"

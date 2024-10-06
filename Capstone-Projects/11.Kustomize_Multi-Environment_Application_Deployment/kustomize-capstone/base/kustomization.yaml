@@ -1,0 +1,26 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - config-map.yaml       # Add your ConfigMap file
+  - secret.yaml           # Add your Secret file
+
+commonLabels:
+  app: my-webapp          # Add a common label to all resources
+  environment: base
+
+commonAnnotations:
+  team: devops            # Add a common annotation to all resources
+  version: v1.0
+
+configMapGenerator:
+  - name: webapp-config
+    literals:
+      - APP_ENV=base            # You can change this per environment in overlays
+      - LOG_LEVEL=info
+
+secretGenerator:
+  - name: webapp-secret
+    literals:
+      - DB_PASSWORD=YWRtaW5wYXNz  # Base64 encoded password
+      - API_KEY=YXBpa2V5YmFzZQ==  # Base64 encoded API key
+    type: Opaque                 # Optional: defines the type of Secret
