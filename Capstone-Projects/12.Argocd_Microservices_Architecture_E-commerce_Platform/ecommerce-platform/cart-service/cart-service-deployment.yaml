@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-service
+  namespace: argocd
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cart-service
+  template:
+    metadata:
+      labels:
+        app: cart-service
+    spec:
+      containers:
+        - name: cart-service
+          image: micgreat/cart-service:latest
+          ports:
+            - containerPort: 3002
+          env:
+            - name: NODE_ENV
+              value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-service
+  namespace: argocd
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3002
+      targetPort: 3002
+  selector:
+    app: cart-service
