@@ -579,6 +579,3 @@ helm install kong kong/kong --namespace kong --create-namespace
 ![img16](./img/19.kong.png)
 ![img17](./img/20.kong-components.png)
 
-
-
-cygVyb8W3a4hxJ2P
