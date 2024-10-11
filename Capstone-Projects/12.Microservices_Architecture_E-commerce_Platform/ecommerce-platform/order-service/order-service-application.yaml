@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: order-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/Micgreat/helm-web-app.git'  # Replace with your repo URL
+    targetRevision: HEAD
+    path: ecommerce-platform/order-service  # Path to your order-service deployment YAML
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: ecommerce  # Replace with your target namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
